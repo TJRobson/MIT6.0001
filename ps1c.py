@@ -5,6 +5,11 @@ total_cost = 1000000*0.25
 def getHigh(sal, tot) :
     hi = (tot/36)/(sal/12)
     return hi
+
+def floatRound(ans) :
+    ans = int(ans*10000)
+    ans = float(ans)/10000
+    return ans
     
 def testRate(ans, sal) :
     savings = 0 
@@ -19,26 +24,23 @@ def testRate(ans, sal) :
             changingSal = changingSal*increse
     return savings
 
-def salPercent(total, salary) :
-    
+def salPercent(total, salary) : 
     steps = 0
     epsilon = 100
     low = 0.0
     high = getHigh(salary, total_cost)
     ans = (high + low)/2.0
-    current_savings = testRate(ans, salary)        
+    current_savings = testRate(ans, salary)  
+    lowEps = total - epsilon 
+    hiEps = total + epsilon
         
-    while (current_savings - total) <= epsilon:
-        high = high
-        ans = ans
+    while lowEps >= current_savings or current_savings >= hiEps:
         if current_savings < total:
-            low = ans 
+            low = floatRound(ans)
         else:
-            high = ans
+            high = floatRound(ans)
         ans = (high + low)/2.0
         current_savings = testRate(ans, salary)
-        print(current_savings)
-        print(ans)
         steps += 1
     return steps, ans
         
