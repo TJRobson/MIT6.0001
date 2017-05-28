@@ -36,17 +36,17 @@ def salPercent(total, salary) :
         
     while lowEps >= current_savings or current_savings >= hiEps:
         if current_savings < total:
-            low = floatRound(ans)
+            low = ans
         else:
-            high = floatRound(ans)
-        ans = (high + low)/2.0
+            high = ans
+        ans = floatRound((high + low)/2.0)
         current_savings = testRate(ans, salary)
         steps += 1
     return steps, ans
         
 noSteps, bestRate = salPercent(total_cost, annual_salary)    
 
-print(bestRate, noSteps)    
-
+print('Best savings rate: ' + str(bestRate))    
+print('Steps in bisection search: ' + str(noSteps))
 
 
