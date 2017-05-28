@@ -9,15 +9,14 @@ def getHigh(sal, tot) :
 def testRate(ans, sal) :
     savings = 0 
     increse = 1.07
+    changingSal = sal  
     for i in range(36):
-        changingSal = sal 
         month = (changingSal/12)*ans
         savingsReturn = (savings*0.04)/12
         monthPortion = month + savingsReturn 
         savings += monthPortion
-        if i % 6 == 0:
+        if i >= 6 and i % 6 == 0:
             changingSal = changingSal*increse
-            #print(changingSal)
     return savings
 
 def salPercent(total, salary) :
@@ -38,8 +37,8 @@ def salPercent(total, salary) :
             high = ans
         ans = (high + low)/2.0
         current_savings = testRate(ans, salary)
-        #print(current_savings)
-        #print(ans)
+        print(current_savings)
+        print(ans)
         steps += 1
     return steps, ans
         
