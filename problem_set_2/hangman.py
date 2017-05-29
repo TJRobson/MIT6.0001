@@ -79,13 +79,6 @@ def is_word_guessed(secret_word, letters_guessed):
 
     return all_letters_guessed   
 
-secret_word = 'apple' 
-letters_guessed = ['w', 'q', 'l', 'p', 'e', 'a']
-  
-print(is_word_guessed(secret_word, letters_guessed))
-  
-
-
 
 def get_guessed_word(secret_word, letters_guessed):
     '''
