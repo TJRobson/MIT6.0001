@@ -10,30 +10,30 @@ def floatRound(ans) :
     ans = int(ans*10000)
     ans = float(ans)/10000
     return ans
-    
+
 def testRate(ans, sal) :
-    savings = 0 
+    savings = 0
     increse = 1.07
-    changingSal = sal  
+    changingSal = sal
     for i in range(36):
         month = (changingSal/12)*ans
         savingsReturn = (savings*0.04)/12
-        monthPortion = month + savingsReturn 
+        monthPortion = month + savingsReturn
         savings += monthPortion
         if i >= 6 and i % 6 == 0:
-            changingSal = changingSal*increse
+            changingSal *= increse
     return savings
 
-def salPercent(total, salary) : 
+def salPercent(total, salary) :
     steps = 0
-    epsilon = 100
     low = 0.0
     high = getHigh(salary, total_cost)
     ans = (high + low)/2.0
-    current_savings = testRate(ans, salary)  
-    lowEps = total - epsilon 
+    current_savings = testRate(ans, salary)
+    epsilon = 100
+    lowEps = total - epsilon
     hiEps = total + epsilon
-        
+
     while lowEps >= current_savings or current_savings >= hiEps:
         if current_savings < total:
             low = ans
@@ -42,11 +42,12 @@ def salPercent(total, salary) :
         ans = floatRound((high + low)/2.0)
         current_savings = testRate(ans, salary)
         steps += 1
+        #print(current_savings, 'current savings')
     return steps, ans
-        
-noSteps, bestRate = salPercent(total_cost, annual_salary)    
 
-print('Best savings rate: ' + str(bestRate))    
+noSteps, bestRate = salPercent(total_cost, annual_salary)
+
+print('Best savings rate: ' + str(bestRate))
 print('Steps in bisection search: ' + str(noSteps))
 
 
