@@ -26,28 +26,35 @@ def testRate(ans, sal) :
 
 def salPercent(total, salary) :
     steps = 0
-    low = 0.0
-    high = getHigh(salary, total_cost)
+    low, high = 0.0, getHigh(salary, total_cost)
     ans = (high + low)/2.0
     current_savings = testRate(ans, salary)
     epsilon = 100
-    lowEps = total - epsilon
-    hiEps = total + epsilon
+    lowEps, hiEps = total - epsilon, total + epsilon
 
     while lowEps >= current_savings or current_savings >= hiEps:
         if current_savings < total:
             low = ans
+            if ans > 1:
+                break
         else:
             high = ans
         ans = floatRound((high + low)/2.0)
         current_savings = testRate(ans, salary)
         steps += 1
-        #print(current_savings, 'current savings')
     return steps, ans
+    
+def printFunc(total, salary, func) :
+    steps, rate = func(total, salary) 
+    if rate > 1:
+        print('It is not possible to pay the down payment in three years.')
+    else:
+        print('Best savings rate: %g \nSteps in bisection search: %d' % (rate, steps) )
+    
+printFunc(total_cost, annual_salary, salPercent)
 
-noSteps, bestRate = salPercent(total_cost, annual_salary)
-
-print('Best savings rate: ' + str(bestRate))
-print('Steps in bisection search: ' + str(noSteps))
+#noSteps, bestRate = salPercent(total_cost, annual_salary)
+#print('Best savings rate: ' + str(bestRate))
+#print('Steps in bisection search: ' + str(noSteps))
 
 
