@@ -109,10 +109,18 @@ def get_available_letters(letters_guessed):
     returns: string (of letters), comprised of letters that represents which letters have not
       yet been guessed.
     '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    available_letters = ''
+    alphabet = string.ascii_lowercase
+    alphabet_list = list(alphabet)
     
-    
+    for letter in letters_guessed:
+        if letter in alphabet_list:
+            alphabet_list.remove(letter)
+        else:
+            continue
+    available_letters = ''.join(alphabet_list)
+    return available_letters
+ 
 
 def hangman(secret_word):
     '''
