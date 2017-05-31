@@ -147,9 +147,34 @@ def hangman(secret_word):
     
     Follows the other limitations detailed in the problem write-up.
     '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
-
+    guesses, guessed_letters = 6, []
+    length = len(secret_word)
+    break_line = '\n-------------'
+    print('Welcome to the game Hangman!\nI am thinking of a word that is %d letters long.'%(length)+break_line)
+    print(secret_word)    
+    
+    while guesses > 0 or is_word_guessed(secret_word, guessed_letters):
+        
+        available_letters = get_available_letters(guessed_letters)
+        print('You have %d guesses left.\nAvailable letters: %s'%(guesses, available_letters))
+        guess = input('Please guess a letter: ')
+        guessed_letters.append(guess)
+        guess_string = get_guessed_word(secret_word, guessed_letters)
+        
+        if guess_string.find(guess) > -1: 
+            print('Good guess: %s' %(guess_string) + break_line)
+        else:
+            print('Oops! That letter is not in my word: %s' %(guess_string) + break_line)
+        guesses -= 1
+        
+    if is_word_guessed(secret_word, guessed_letters):
+        print('Congratulations, you won!')
+    else:
+        print('Sorry, you ran out of guesses. The word was %s'%(secret_word))
+        
+        
+        
+    
 
 
 # When you've completed your hangman function, scroll down to the bottom
