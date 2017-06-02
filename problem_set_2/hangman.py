@@ -147,6 +147,10 @@ def hangman(secret_word):
     
     Follows the other limitations detailed in the problem write-up.
     '''
+    def is_vowel(guess) :
+        vowels= ['a','e','i','o']
+        return guess in vowels
+    
     guesses, guessed_letters = 6, []
     length = len(secret_word)
     break_line = '\n-------------'
