@@ -150,8 +150,7 @@ def hangman(secret_word):
     guesses, guessed_letters = 6, []
     length = len(secret_word)
     break_line = '\n-------------'
-    print('Welcome to the game Hangman!\nI am thinking of a word that is %d letters long.'%(length)+break_line)
-    print(secret_word)   
+    print('Welcome to the game Hangman!\nI am thinking of a word that is %d letters long.'%(length)+break_line)   
     boolean = is_word_guessed(secret_word, guessed_letters)
     
     while guesses >= 1:
