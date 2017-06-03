@@ -66,7 +66,7 @@ def is_word_guessed(secret_word, letters_guessed):
     all_letters_guessed = False
     
     for letter in sw:
-        if len(letters_guessed) <= len(sw):
+        if len(letters_guessed) < len(sw):
             break
         for i, guess in enumerate(letters_guessed):
             if guess == letter:
@@ -182,6 +182,7 @@ def hangman(secret_word):
     while not game_is_over:
         
         available_letters = get_available_letters(guessed_letters)
+        word_string = get_guessed_word(secret_word, guessed_letters)
         print('You have %d guesses left.\nAvailable letters: %s'%(guesses, available_letters))
         guess = str.lower(input('Please guess a letter: '))
         
@@ -196,11 +197,9 @@ def hangman(secret_word):
                     print('guessed before, warning', warnings)
             else:
                 guessed_letters.append(guess)
-                guess_string = get_guessed_word(secret_word, guessed_letters)
-                word_string = get_guessed_word(secret_word, guessed_letters)
                 word_comp = is_word_guessed(secret_word, guessed_letters)
+                word_string = get_guessed_word(secret_word, guessed_letters)
                 game_is_over = is_game_over(word_comp, guesses, warnings)
-                
                 if is_vowel(guess):                    
                     if is_guess_in_word(guess, secret_word):
                         guesses = guesses_cap(guesses, 2)
@@ -214,12 +213,13 @@ def hangman(secret_word):
                 else:
                     if is_guess_in_word(guess, secret_word):
                         if game_is_over:
+                            print('hit')
                             break
                         else:
                             print('const correct', word_string)
                     else:
                         guesses -= 1
-                        print('const incorrect')
+                        print('const incorrect', word_string)
         else:
             warnings -= 1
             game_is_over = is_game_over(word_comp, guesses, warnings)
