@@ -146,36 +146,99 @@ def hangman(secret_word):
       partially guessed word so far.
     
     Follows the other limitations detailed in the problem write-up.
-    '''
+    '''        
+    def is_game_over(is_word_guessed, guesses, warnings) :
+        is_over = False
+        if any([is_word_guessed, guesses <= 1, warnings <= 0]):
+            is_over = True
+        return is_over
+    
     def is_vowel(guess) :
         vowels= ['a','e','i','o']
         return guess in vowels
+        
+    def has_been_guessed(guess, guess_list) :
+        guess_set = set(guess_list)
+        return guess in guess_set
+        
+    def is_guess_in_word(guess, secret_word) :
+        return guess in secret_word
+        
+    def guesses_cap(guesses, num) :
+        if guesses + num >= 6:
+            guesses = 6
+        else:
+            guesses += num
+        return guesses
     
-    guesses, guessed_letters = 6, []
+         
+    guesses, guessed_letters, warnings = 6, [], 3
     length = len(secret_word)
     break_line = '\n-------------'
     print('Welcome to the game Hangman!\nI am thinking of a word that is %d letters long.'%(length)+break_line)   
-    boolean = is_word_guessed(secret_word, guessed_letters)
+    word_comp = is_word_guessed(secret_word, guessed_letters)
+    game_is_over = is_game_over(word_comp, guesses, warnings)
     
-    while guesses >= 1:
+    while not game_is_over:
         
         available_letters = get_available_letters(guessed_letters)
         print('You have %d guesses left.\nAvailable letters: %s'%(guesses, available_letters))
-        guess = input('Please guess a letter: ')
-        guessed_letters.append(guess)
-        guess_string = get_guessed_word(secret_word, guessed_letters)
-
-        if guess_string.find(guess) > -1:
-            guessed_letters.append(guess)
-            boolean = is_word_guessed(secret_word, guessed_letters)
-            if boolean:
+        guess = str.lower(input('Please guess a letter: '))
+        
+        
+        if str.isalpha(guess):
+            if has_been_guessed(guess, guessed_letters):
+                warnings -= 1
+                game_is_over = is_game_over(word_comp, guesses, warnings)
+                if game_is_over:
+                    break
+                else:
+                    print('guessed before, warning', warnings)
+            else:
+                guessed_letters.append(guess)
+                guess_string = get_guessed_word(secret_word, guessed_letters)
+                word_string = get_guessed_word(secret_word, guessed_letters)
+                word_comp = is_word_guessed(secret_word, guessed_letters)
+                game_is_over = is_game_over(word_comp, guesses, warnings)
+                
+                if is_vowel(guess):                    
+                    if is_guess_in_word(guess, secret_word):
+                        guesses = guesses_cap(guesses, 2)
+                        if game_is_over:
+                            break
+                        else:
+                            print('vowel correct', word_string)
+                    else:
+                        guesses -= 2
+                        print('vowel incorrect')
+                else:
+                    if is_guess_in_word(guess, secret_word):
+                        if game_is_over:
+                            break
+                        else:
+                            print('const correct', word_string)
+                    else:
+                        guesses -= 1
+                        print('const incorrect')
+        else:
+            warnings -= 1
+            game_is_over = is_game_over(word_comp, guesses, warnings)
+            if game_is_over:
                 break
             else:
-                print('Good guess: %s' %(guess_string) + break_line)
-        else:
-            print('Oops! That letter is not in my word: %s' %(guess_string) + break_line)
-
-        guesses -= 1
+                print('non alpha character', warnings)
+#
+#        if guess_string.find(guess) > -1:
+#            guessed_letters.append(guess)
+#            boolean = is_word_guessed(secret_word, guessed_letters)
+#            if boolean:
+#                break
+#            else:
+#                print('Good guess: %s' %(guess_string) + break_line)
+#        else:
+#            print('Oops! That letter is not in my word: %s' %(guess_string) + break_line)
+#
+#        guesses -= 1
         
     if is_word_guessed(secret_word, guessed_letters):
         print('Congratulations, you won!')
@@ -268,8 +331,8 @@ if __name__ == "__main__":
 
     # To test part 2, comment out the pass line above and
     # uncomment the following two lines.
-    
-    secret_word = choose_word(wordlist)
+    secret_word = 'apple'
+    #secret_word = choose_word(wordlist)
     hangman(secret_word)
 
 ###############
