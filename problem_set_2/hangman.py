@@ -11,6 +11,7 @@
 # (so be sure to read the docstrings!)
 import random
 import string
+import re
 
 WORDLIST_FILENAME = "words.txt"
 
@@ -287,10 +288,27 @@ def match_with_gaps(my_word, other_word):
         _ , and my_word and other_word are of the same length;
         False otherwise: 
     '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
-
-
+    my_word = re.sub(' ', '', my_word)
+    mw_list, ow_list = list(my_word), list(other_word)
+    word_match = False
+    for i, letter in enumerate(mw_list):
+        other_letter = ow_list[i]
+        if len(mw_list) != len(ow_list):
+            break
+        else:
+            if letter == '_':
+                if other_letter in mw_list:
+                    word_match = False
+                    break
+                else:
+                    word_match = True
+            elif letter == other_letter:
+                word_match = True
+            else:
+                word_match = False
+                break
+    return word_match    
+      
 
 def show_possible_matches(my_word):
     '''
@@ -351,7 +369,7 @@ if __name__ == "__main__":
     # To test part 2, comment out the pass line above and
     # uncomment the following two lines.
     secret_word = choose_word(wordlist)
-    hangman(secret_word)
+    #hangman(secret_word)
 
 ###############
     
