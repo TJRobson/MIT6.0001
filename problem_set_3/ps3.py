@@ -10,6 +10,7 @@
 import math
 import random
 import string
+import bisect
 
 VOWELS = 'aeiou'
 CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
@@ -152,7 +153,7 @@ def deal_hand(n):
     for i in range(num_vowels, n):    
         x = random.choice(CONSONANTS)
         hand[x] = hand.get(x, 0) + 1
-    
+
     return hand
 
 #
@@ -200,9 +201,28 @@ def is_valid_word(word, hand, word_list):
     word_list: list of lowercase strings
     returns: boolean
     """
+    word_is_valid = False
+    word = str.lower(word)
+    letter_list, hand_copy = list(word), hand.copy()
 
-    pass  # TO DO... Remove this line when you implement this function
-
+    if word in word_list:
+        word_is_valid = True
+    else:
+        return False
+        
+    for letter in letter_list:
+        if letter in hand_copy:
+            hand_copy[letter] -= 1
+            if hand_copy[letter] < 0:
+                word_is_valid = False
+                break
+            else:
+                word_is_valid = True
+        else:
+            word_is_valid = False
+            break
+        
+    return word_is_valid
 #
 # Problem #5: Playing a hand
 #
