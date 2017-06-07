@@ -10,7 +10,6 @@
 import math
 import random
 import string
-import bisect
 
 VOWELS = 'aeiou'
 CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
@@ -201,14 +200,32 @@ def is_valid_word(word, hand, word_list):
     word_list: list of lowercase strings
     returns: boolean
     """
+    def wild_card_test(letter_list, word_set):
+        wild_card_match = False
+        vowels = ['a','e','i','o','u']
+        index = letter_list.index('*')
+        list_copy = letter_list[:]
+        for v in vowels:
+           list_copy[index] = v
+           word = ''.join(list_copy)
+           if word in word_set:
+               wild_card_match = True
+               break
+           else:
+               continue 
+        return wild_card_match
+    
     word_is_valid = False
     word = str.lower(word)
     letter_list, hand_copy = list(word), hand.copy()
-
+    word_set = set(word_list)
+    
     if word in word_list:
         word_is_valid = True
     else:
-        return False
+        word_is_vaild = wild_card_test(letter_list, word_set)
+        if not word_is_vaild:
+            return False
         
     for letter in letter_list:
         if letter in hand_copy:
