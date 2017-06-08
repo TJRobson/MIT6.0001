@@ -258,9 +258,13 @@ def calculate_handlen(hand):
     hand: dictionary (string-> int)
     returns: integer
     """
+    hand_length = 0
+    for value in hand.values():
+        hand_length += value
+    return hand_length
     
-    pass  # TO DO... Remove this line when you implement this function
-
+hand = deal_hand(8)
+print(hand, 'hand', calculate_handlen(hand), 'hand length')
 def play_hand(hand, word_list):
 
     """
