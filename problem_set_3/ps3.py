@@ -10,6 +10,7 @@
 import math
 import random
 import string
+import re
 
 VOWELS = 'aeiou'
 CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
@@ -233,10 +234,10 @@ def is_valid_word(word, hand, word_list):
     else:
         if '*' in letter_list:
             word_is_vaild = wild_card_test(letter_list, word_set)
-            if not word_is_vaild:
-                return False
-            else:
+            if word_is_vaild:
                 word_is_vaild = True
+            else:
+                return False
         else:
             return  False
         
@@ -322,8 +323,6 @@ def play_hand(hand, word_list):
 #
 # Problem #6: Playing a game
 # 
-
-
 #
 # procedure you will use to substitute a letter in a hand
 #
@@ -349,10 +348,19 @@ def substitute_hand(hand, letter):
     letter: string
     returns: dictionary (string -> int)
     """
-    
-    pass  # TO DO... Remove this line when you implement this function
-       
-    
+    alphabet = string.ascii_lowercase
+    sub_hand = hand.copy()
+    hand_letters = list(hand.keys())
+    remove_str = ''
+    for l in hand_letters: remove_str += l + '|'
+    chars_to_remove = re.compile(remove_str)
+    rem_alpha = chars_to_remove.sub('', alphabet)
+    replacement = random.choice(rem_alpha)
+    sub_hand.update({replacement:hand[letter]})
+    del sub_hand[letter]
+
+    return sub_hand       
+      
 def play_game(word_list):
     """
     Allow the user to play a series of hands
