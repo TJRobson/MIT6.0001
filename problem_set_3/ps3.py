@@ -118,11 +118,11 @@ def display_hand(hand):
 
     hand: dictionary (string -> int)
     """
-    
+    hand_string = ''
     for letter in hand.keys():
         for j in range(hand[letter]):
-             print(letter, end=' ')      # print all on the same line
-    print()                              # print an empty line
+            hand_string += letter + ' '
+    return hand_string
 
 #
 # Make sure you understand how this function works and what it does!
@@ -231,9 +231,14 @@ def is_valid_word(word, hand, word_list):
     if word in word_list:
         word_is_valid = True
     else:
-        word_is_vaild = wild_card_test(letter_list, word_set)
-        if not word_is_vaild:
-            return False
+        if '*' in letter_list:
+            word_is_vaild = wild_card_test(letter_list, word_set)
+            if not word_is_vaild:
+                return False
+            else:
+                word_is_vaild = True
+        else:
+            return  False
         
     for letter in letter_list:
         if letter in hand_copy:
@@ -262,9 +267,7 @@ def calculate_handlen(hand):
     for value in hand.values():
         hand_length += value
     return hand_length
-    
-hand = deal_hand(8)
-print(hand, 'hand', calculate_handlen(hand), 'hand length')
+
 def play_hand(hand, word_list):
 
     """
@@ -295,41 +298,27 @@ def play_hand(hand, word_list):
       returns: the total score for the hand
       
     """
-    
-    # BEGIN PSEUDOCODE <-- Remove this comment when you implement this function
-    # Keep track of the total score
-    
-    # As long as there are still letters left in the hand:
-    
-        # Display the hand
+    hand_len, total_score = calculate_handlen(hand), 0
+    while hand_len > 0:
+        print('Current Hand: ' + display_hand(hand))
+        user_input = str(input('Enter word, or "!!" to indicate that you are finished: '))
+        if user_input == "!!":
+            break
+        else:
+            if is_valid_word(user_input,hand, word_list):
+                points = get_word_score(user_input, hand_len)
+                total_score += points
+                print('"%s" earned %d points. Total: %s\n'%(user_input,points,total_score))
+            else:
+                print('That is not a vaild word. Please choose another word.\n')
+        hand = update_hand(hand, user_input)
+        hand_len = calculate_handlen(hand)
         
-        # Ask user for input
-        
-        # If the input is two exclamation points:
-        
-            # End the game (break out of the loop)
-
-            
-        # Otherwise (the input is not two exclamation points):
-
-            # If the word is valid:
-
-                # Tell the user how many points the word earned,
-                # and the updated total score
-
-            # Otherwise (the word is not valid):
-                # Reject invalid word (print a message)
-                
-            # update the user's hand by removing the letters of their inputted word
-            
-
-    # Game is over (user entered '!!' or ran out of letters),
-    # so tell user the total score
-
-    # Return the total score as result of function
-
-
-
+    if hand_len == 0:
+        print('Ran out of letters. Total score: %d' %(total_score))
+    else:
+        print('Total score: %d' %(total_score))
+    return total_score
 #
 # Problem #6: Playing a game
 # 
@@ -338,7 +327,6 @@ def play_hand(hand, word_list):
 #
 # procedure you will use to substitute a letter in a hand
 #
-
 def substitute_hand(hand, letter):
     """ 
     Allow the user to replace all copies of one letter in the hand (chosen by user)
