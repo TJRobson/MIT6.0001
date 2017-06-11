@@ -316,9 +316,9 @@ def play_hand(hand, word_list):
         hand_len = calculate_handlen(hand)
         
     if hand_len == 0:
-        print('Ran out of letters. Total score: %d' %(total_score))
+        print('Ran out of letters.\nTotal score for this hand: %d\n----------' %(total_score))
     else:
-        print('Total score: %d' %(total_score))
+        print('Total score for this hand: %d\n----------' %(total_score))
     return total_score
 #
 # Problem #6: Playing a game
@@ -351,16 +351,25 @@ def substitute_hand(hand, letter):
     alphabet = string.ascii_lowercase
     sub_hand = hand.copy()
     hand_letters = list(hand.keys())
+    
     remove_str = ''
-    for l in hand_letters: remove_str += l + '|'
+    for i, l in enumerate(hand_letters): 
+        if i == len(hand_letters) - 1:
+            remove_str += l
+        elif l == '*':
+            continue
+        else:
+            remove_str += l + '|'  
+            
     chars_to_remove = re.compile(remove_str)
     rem_alpha = chars_to_remove.sub('', alphabet)
+
     replacement = random.choice(rem_alpha)
     sub_hand.update({replacement:hand[letter]})
     del sub_hand[letter]
 
     return sub_hand       
-      
+
 def play_game(word_list):
     """
     Allow the user to play a series of hands
@@ -391,10 +400,44 @@ def play_game(word_list):
 
     word_list: list of lowercase strings
     """
+    def sub_letter_choice(hand):
+        change_letter = str.lower(input('Would you like to substitute a letter? '))
+        if change_letter == 'yes':
+            letter = str.lower(input('which letter would you like to replace: '))
+            new_hand = substitute_hand(hand, letter)
+            #print('\nCurrent hand: '+display_hand(new_hand))
+            return new_hand
+        elif change_letter == 'no':
+            return hand
     
-    print("play_game not implemented.") # TO DO... Remove this line when you implement this function
+    def replay_hand(hand):
+        user_choice = str.lower(input('Would you like to replay the hand? '))
+        if user_choice == 'yes':
+            print('\nCurrent hand: '+display_hand(hand))
+            return hand
+        elif user_choice == 'no':
+            new_hand = deal_hand(HAND_SIZE)
+            print('Current hand: '+display_hand(new_hand))
+            next_hand = sub_letter_choice(new_hand)
+            return next_hand
     
-
+    no_of_hands = int(input('Enter number of hands: '))
+    hand_score, total_score = 0, 0
+    hand = dict()
+    
+    for i in range(0, no_of_hands):
+        if i > 0:
+            next_hand = replay_hand(hand)
+            hand_score = play_hand(next_hand, word_list)
+            total_score += hand_score
+        else:
+            hand = deal_hand(HAND_SIZE)
+            print('Current hand: '+display_hand(hand))
+            next_hand = sub_letter_choice(hand)
+            hand_score = play_hand(next_hand, word_list)
+            hand = next_hand
+            total_score += hand_score
+    print('Total score over all hands: %d'%(total_score))
 
 #
 # Build data structures used for entire session and play game
