@@ -27,8 +27,8 @@ def get_permutations(sequence):
     if len(sequence) == 1:
         permutations_list.append(sequence)
     else:
-        for char in sequence:
-            for perm in get_permutations(sequence.replace(char, '', 1)):
+        for i, char in enumerate(sequence):
+            for perm in get_permutations(sequence[:i]+sequence[i+1:]):
                 permutations_list.append(char+perm)
     return permutations_list
 
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     print('Input:', example_input)
     print('Expected Output:', ['abc', 'acb', 'bac', 'bca', 'cab', 'cba'])
     print('Actual Output:', get_permutations(example_input))
-    print('My Test:', get_permutations('*|_'))
+    print('My Test:', len(get_permutations('THOMA')))
 #    # Put three example test cases here (for your sanity, limit your inputs
 #    to be three characters or fewer as you will have n! permutations for a 
 #    sequence of length n)
