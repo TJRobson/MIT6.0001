@@ -271,15 +271,19 @@ if __name__ == '__main__':
     print('series of strings', sentence.get_message_text_encrypted())
 #
     #Example test case (CiphertextMessage)
-#    ciphertext = CiphertextMessage('jgnnq')
-#    print('Expected Output:', (24, 'hello'))
-#    print('Actual Output:', ciphertext.decrypt_message())
+    ciphertext = CiphertextMessage('jgnnq')
+    print('Expected Output:', (24, 'hello'))
+    print('Actual Output:', ciphertext.decrypt_message())
 
     #TODO: WRITE YOUR TEST CASES HERE
     ciphersent = CiphertextMessage('Kl, pb qdph lv Wkrpdv!')
     print('Expected Output:', (23, 'Hi, my name is Thomas!'))
     print('Actual Output:', ciphersent.decrypt_message())
-
+    print()
     #TODO: best shift value and unencrypted story 
+    story = get_story_string()
+    cipher_story = CiphertextMessage(story)
+    print('The orignal encrypted story:\n' + story)
+    print('Actual Output:\n', cipher_story.decrypt_message())
     
     pass #delete this line and replace with your code here
