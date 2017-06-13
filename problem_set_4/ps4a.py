@@ -24,25 +24,13 @@ def get_permutations(sequence):
     '''
     permutations_list = []
     
-    def perm_sec(string):
-        
-        reverse = string[::-1]
-        permutations_list.append(reverse)
-        first_letter = reverse[0]
-        cut_string = reverse[1:]
-        cut_reverse = cut_string[::-1]
-        the_next_string = first_letter+cut_reverse
-        permutations_list.append(the_next_string)
-        
-        if the_next_string == sequence:
-            return
-        else:
-            return perm_sec(the_next_string)
-    
-    perm_sec(sequence)
-      
-    return permutations_list      
-
+    if len(sequence) == 1:
+        permutations_list.append(sequence)
+    else:
+        for char in sequence:
+            for perm in get_permutations(sequence.replace(char, '', 1)):
+                permutations_list.append(char+perm)
+    return permutations_list
 
 if __name__ == '__main__':
 #    #EXAMPLE
@@ -50,8 +38,7 @@ if __name__ == '__main__':
     print('Input:', example_input)
     print('Expected Output:', ['abc', 'acb', 'bac', 'bca', 'cab', 'cba'])
     print('Actual Output:', get_permutations(example_input))
-    print('for letters', get_permutations('a'))
-    
+    print('My Test:', get_permutations('*|_'))
 #    # Put three example test cases here (for your sanity, limit your inputs
 #    to be three characters or fewer as you will have n! permutations for a 
 #    sequence of length n)
