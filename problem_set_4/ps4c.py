@@ -34,7 +34,7 @@ def is_word(word_list, word):
     capitalization and punctuation
 
     word_list (list): list of words in the dictionary.
-    word (string): a possible word.
+    word (string): apass #delete this line and replace with your code here possible word.
     
     Returns: True if word is in word_list, False otherwise
 
@@ -113,7 +113,8 @@ class SubMessage(object):
         perm_lower = vowels_permutation.lower()
         perm_upper = perm_lower.upper()
         perm_string = perm_lower + perm_upper
-        return dict(zip(vowel_string, perm_string))
+        vowel_list, perm_list = list(vowel_string), list(perm_string)
+        return dict(zip(vowel_list, perm_list))
     
     def apply_transpose(self, transpose_dict):
         '''
@@ -121,9 +122,17 @@ class SubMessage(object):
         
         Returns: an encrypted version of the message text, based 
         on the dictionary
-        '''
+        ''' 
+        encrypt_str = ''
         
-        pass #delete this line and replace with your code here
+        for char in self.message_text:
+            if char in transpose_dict:
+                encrypt_str += transpose_dict[char]
+            else:
+                encrypt_str += char
+                
+        return encrypt_str
+                
         
 class EncryptedSubMessage(SubMessage):
     def __init__(self, text):
@@ -136,8 +145,9 @@ class EncryptedSubMessage(SubMessage):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
-
+        self.message_text = text
+        self.valid_words = load_words(WORDLIST_FILENAME)
+    
     def decrypt_message(self):
         '''
         Attempt to decrypt the encrypted message 
@@ -156,7 +166,23 @@ class EncryptedSubMessage(SubMessage):
         
         Hint: use your function from Part 4A
         '''
-        pass #delete this line and replace with your code here
+        perm_list = get_permutations(VOWELS_LOWER)
+        decrypt_string, hits = '', 0
+        for perm in perm_list:
+            perm_dict = self.build_transpose_dict(perm)
+            perm_string = self.apply_transpose(perm_dict)
+            perm_list = perm_string.split()
+            words_hits = 0
+            for word in perm_list:
+                boolean = is_word(self.valid_words, word)
+                if boolean:
+                    words_hits += 1
+                else:
+                    words_hits -= 1
+            if words_hits > hits:
+                hits = words_hits
+                decrypt_string = perm_string
+        return decrypt_string
     
 
 if __name__ == '__main__':
@@ -165,7 +191,7 @@ if __name__ == '__main__':
     message = SubMessage("Hello World!")
     permutation = "eaiuo"
     enc_dict = message.build_transpose_dict(permutation)
-    print('this is transposed dict', enc_dict)
+    #print('this is transposed dict', enc_dict)
     print("Original message:", message.get_message_text(), "Permutation:", permutation)
     print("Expected encryption:", "Hallu Wurld!")
     print("Actual encryption:", message.apply_transpose(enc_dict))
