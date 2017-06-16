@@ -269,6 +269,9 @@ if __name__ == '__main__':
     
     sentence = PlaintextMessage('Hi, my name is Thomas!', 3)
     print('series of strings', sentence.get_message_text_encrypted())
+    print('get shift', sentence.get_shift())
+    sentence.change_shift(8)
+    print('sentence with new shift', sentence.get_message_text_encrypted())
 #
     #Example test case (CiphertextMessage)
     ciphertext = CiphertextMessage('jgnnq')
@@ -286,4 +289,3 @@ if __name__ == '__main__':
     print('The orignal encrypted story:\n' + story)
     print('Actual Output:\n', cipher_story.decrypt_message())
     
-    pass #delete this line and replace with your code here
