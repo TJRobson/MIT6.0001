@@ -167,7 +167,7 @@ class EncryptedSubMessage(SubMessage):
         Hint: use your function from Part 4A
         '''
         perm_list = get_permutations(VOWELS_LOWER)
-        decrypt_string, hits = '', 0
+        decrypt_string, hits = self.message_text, 0
         for perm in perm_list:
             perm_dict = self.build_transpose_dict(perm)
             perm_string = self.apply_transpose(perm_dict)
@@ -199,3 +199,12 @@ if __name__ == '__main__':
     print("Decrypted message:", enc_message.decrypt_message())
      
     #TODO: WRITE YOUR TEST CASES HERE
+    print('----------------------->') 
+    my_message = SubMessage('George, George, George of the Jungle Strong as he can be Watch out for that tree George, George, George of the Jungle Lives a life thats free Watch out for that tree ')
+    perm_alt = 'uaeoi'
+    encode_dic = my_message.build_transpose_dict(perm_alt)
+    print("Original message:", my_message.get_message_text(), "Permutation:", perm_alt)
+    print("Actual encryption:", my_message.apply_transpose(encode_dic))
+    encoded_message = EncryptedSubMessage(my_message.apply_transpose(encode_dic))
+    print("Decrypted message:", encoded_message.decrypt_message())
+    
