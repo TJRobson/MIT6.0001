@@ -11,6 +11,7 @@ from project_util import translate_html
 from mtTkinter import *
 from datetime import datetime
 import pytz
+import re
 
 
 #-----------------------------------------------------------------------
@@ -57,26 +58,26 @@ def process(url):
 # TODO: NewsStory
 class NewsStory(object):
     def __init__(self, guid, title, description, link, pubdate):
-        self.story_guid = guid
-        self.story_title = title
-        self.story_description = description
-        self.story_link = link
-        self.story_pubdate = pubdate
+        self.guid = guid
+        self.title = title
+        self.description = description
+        self.link = link
+        self.pubdate = pubdate
         
     def get_guid(self):
-        return self.story_guid
+        return self.guid
         
     def get_title(self):
-        return self.story_title
+        return self.title
         
     def get_description(self):
-        return self.story_description
+        return self.description
         
     def get_link(self):
-        return self.story_link
+        return self.link
         
     def get_pubdate(self):
-        return self.story_pubdate
+        return self.pubdate
         
 #======================
 # Triggers
@@ -95,9 +96,33 @@ class Trigger(object):
 
 # Problem 2
 # TODO: PhraseTrigger
+class PhraseTrigger(Trigger, NewsStory):
+    def __init__(self, argument, phrase):
+        self.argument = argument
+        self.phrase = phrase
+        
+    def is_phrase_in(self, argument):
+        phrase_str, argument_str = self.phrase.lower(), self.argument.lower()
+        remove = re.compile('[^a-zA-Z]')
+        phrase_str = remove.sub(' ', phrase_str)
+        phrase_str = " ".join(phrase_str.split())
 
+        if argument_str in phrase_str:
+            f, l = argument_str[0], phrase_str.rindex(argument_str[-1])+2
+            phrase_str = (phrase_str[phrase_str.index(f):l]).strip()
+            return argument_str == phrase_str
+        else:
+            return False
+            
 # Problem 3
 # TODO: TitleTrigger
+class TitleTrigger(PhraseTrigger):
+    def __init__(self, argument):
+        self.argument = argument
+
+    def evaluate(self, story):
+        self.phrase = story.get_title()
+        return self.is_phrase_in(self.argument)
 
 # Problem 4
 # TODO: DescriptionTrigger
