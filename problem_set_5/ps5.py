@@ -184,7 +184,12 @@ class AndTrigger(Trigger, NewsStory):
 
 # Problem 9
 # TODO: OrTrigger
-
+class OrTrigger(Trigger, NewsStory):
+    def __init__(self, trig1, trig2):
+        self.trig1, self.trig2 = trig1, trig2
+    
+    def evaluate(self, story):
+        return self.trig1.evaluate(story) or self.trig2.evaluate(story)
 
 #======================
 # Filtering
