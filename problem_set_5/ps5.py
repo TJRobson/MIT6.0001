@@ -108,11 +108,12 @@ class PhraseTrigger(Trigger, NewsStory):
         phrase_str = " ".join(phrase_str.split())
 
         if argument_str in phrase_str:
-            f, l = argument_str[0], phrase_str.rindex(argument_str[-1])+2
-            phrase_str = (phrase_str[phrase_str.index(f):l]).strip()
+            f, l = phrase_str.index(argument_str[0]), phrase_str.rindex(argument_str[-1])+2
+            phrase_str = phrase_str[f:l].strip()
             return argument_str == phrase_str
         else:
             return False
+        
             
 # Problem 3
 # TODO: TitleTrigger
@@ -126,7 +127,14 @@ class TitleTrigger(PhraseTrigger):
 
 # Problem 4
 # TODO: DescriptionTrigger
-
+class DescriptionTrigger(PhraseTrigger):
+    def __init__(self, argument):
+        self.argument = argument
+        
+    def evaluate(self, story):
+        self.phrase = story.get_description()
+        print(self.phrase, self.argument)
+        return self.is_phrase_in(self.argument)
 # TIME TRIGGERS
 
 # Problem 5
