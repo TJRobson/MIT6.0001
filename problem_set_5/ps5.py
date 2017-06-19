@@ -78,6 +78,15 @@ class NewsStory(object):
         
     def get_pubdate(self):
         return self.pubdate
+    
+#    def __str__(self):
+#        sb = []
+#        for key in self.__dict__:
+#            sb.append("{key}='{value}'".format(key=key, value=self.__dict__[key]))
+#        return ', '.join(sb)
+# 
+#    def __repr__(self):
+#        return self.__str__()
         
 #======================
 # Triggers
@@ -91,6 +100,14 @@ class Trigger(object):
         """
         # DO NOT CHANGE THIS!
         raise NotImplementedError
+#    def __str__(self):
+#        sb = []
+#        for key in self.__dict__:
+#            sb.append("{key}='{value}'".format(key=key, value=self.__dict__[key]))
+#        return ', '.join(sb)
+# 
+#    def __repr__(self):
+#        return self.__str__()
 
 # PHRASE TRIGGERS
 
@@ -205,7 +222,15 @@ def filter_stories(stories, triggerlist):
     # TODO: Problem 10
     # This is a placeholder
     # (we're just returning all the stories, with no filtering)
-    return stories
+    filtered_list = []
+    
+    for story in stories:
+        for trigger in triggerlist:
+            if trigger.evaluate(story):
+                filtered_list.append(story)
+            else:
+                continue
+    return filtered_list
 
 
 
