@@ -100,14 +100,14 @@ class Trigger(object):
         """
         # DO NOT CHANGE THIS!
         raise NotImplementedError
-#    def __str__(self):
-#        sb = []
-#        for key in self.__dict__:
-#            sb.append("{key}='{value}'".format(key=key, value=self.__dict__[key]))
-#        return ', '.join(sb)
-# 
-#    def __repr__(self):
-#        return self.__str__()
+    def __str__(self):
+        sb = []
+        for key in self.__dict__:
+            sb.append("{key}='{value}'".format(key=key, value=self.__dict__[key]))
+        return ', '.join(sb)
+ 
+    def __repr__(self):
+        return self.__str__()
 
 # PHRASE TRIGGERS
 
@@ -253,30 +253,62 @@ def read_trigger_config(filename):
         line = line.rstrip()
         if not (len(line) == 0 or line.startswith('//')):
             lines.append(line)
-
+            
     # TODO: Problem 11
     # line is the list of lines that you need to parse and for which you need
     # to build triggers
+        
+    trigger_dict = {'TITLE': TitleTrigger,
+                   'DESCRIPTION': DescriptionTrigger,
+                   'AFTER': AfterTrigger,
+                   'BEFORE': BeforeTrigger,
+                   'NOT': NotTrigger,
+                   'AND': AndTrigger,
+                   'OR': OrTrigger,
+                   'PHRASE': PhraseTrigger}
+   
+ 
+    broken_lines = []
+    for line in lines:
+        broken_lines.append(line.split(','))
+        
+    trig_dic = dict()
+    triggerlist = []
+    
+    for line in broken_lines:
+        var_name, trig = line[0], line[1]
+        if var_name == 'ADD':
+            for t in line[1:]:
+                triggerlist.append(t)         
+        elif trig == 'AND' or trig == 'OR': 
+            arg_one, arg_two = line[2], line[3]
+            trig_dic.update({var_name: trigger_dict[trig](arg_one, arg_two)})
+            #trig_dic[var_name] = trigger_dict[trig](arg_one, arg_two)
+        else:
+            str_arg = ''.join(line[2:])
+            trig_dic.update({var_name: trigger_dict[trig](str_arg)})
+            #trig_dic[var_name] = trigger_dict[trig](str_arg)
+            
+    return triggerlist
 
-    print(lines) # for now, print it so you see what it contains!
+    
 
-
-
-SLEEPTIME = 120 #seconds -- how often we poll
+SLEEPTIME = 60 #seconds -- how often we poll
 
 def main_thread(master):
     # A sample trigger list - you might need to change the phrases to correspond
     # to what is currently in the news
     try:
-        t1 = TitleTrigger("election")
-        t2 = DescriptionTrigger("Trump")
-        t3 = DescriptionTrigger("Clinton")
+        t1 = TitleTrigger("London")
+        t2 = DescriptionTrigger("Terror")
+        t3 = DescriptionTrigger("attack")
         t4 = AndTrigger(t2, t3)
         triggerlist = [t1, t4]
 
         # Problem 11
         # TODO: After implementing read_trigger_config, uncomment this line 
-        # triggerlist = read_trigger_config('triggers.txt')
+        triggerlist = read_trigger_config('triggers.txt')
+        print(triggerlist)
         
         # HELPER CODE - you don't need to understand this!
         # Draws the popup window that displays the filtered stories
