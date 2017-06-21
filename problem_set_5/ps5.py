@@ -63,13 +63,14 @@ class NewsStory(object):
         self.description = description
         self.link = link
         self.pubdate = pubdate
-        
+ 
     def get_guid(self):
         return self.guid
         
     def get_title(self):
+        print(self.title)
         return self.title
-        
+     
     def get_description(self):
         return self.description
         
@@ -79,14 +80,14 @@ class NewsStory(object):
     def get_pubdate(self):
         return self.pubdate
     
-#    def __str__(self):
-#        sb = []
-#        for key in self.__dict__:
-#            sb.append("{key}='{value}'".format(key=key, value=self.__dict__[key]))
-#        return ', '.join(sb)
-# 
-#    def __repr__(self):
-#        return self.__str__()
+    def __str__(self):
+        sb = []
+        for key in self.__dict__:
+            sb.append("{key}='{value}'".format(key=key, value=self.__dict__[key]))
+        return ', '.join(sb)
+ 
+    def __repr__(self):
+        return self.__str__()
         
 #======================
 # Triggers
@@ -107,7 +108,7 @@ class Trigger(object):
         return ', '.join(sb)
  
     def __repr__(self):
-        return self.__str__()
+        return self.__str__() 
 
 # PHRASE TRIGGERS
 
@@ -137,17 +138,17 @@ class PhraseTrigger(Trigger, NewsStory):
 class TitleTrigger(PhraseTrigger):
     def __init__(self, argument):
         self.argument = argument
-
+        
     def evaluate(self, story):
         self.phrase = story.get_title()
         return self.is_phrase_in(self.argument)
 
 # Problem 4
 # TODO: DescriptionTrigger
-class DescriptionTrigger(PhraseTrigger):
+class DescriptionTrigger(PhraseTrigger): 
     def __init__(self, argument):
         self.argument = argument
-        
+
     def evaluate(self, story):
         self.phrase = story.get_description()
         return self.is_phrase_in(self.argument)
@@ -177,6 +178,7 @@ class BeforeTrigger(TimeTrigger):
 class AfterTrigger(TimeTrigger): 
     def evaluate(self, story):
         self.pubdate = self.fix_pubdate(story)
+        print(self.pubdate, self.EST)
         return self.pubdate > self.EST
 
 # COMPOSITE TRIGGERS
@@ -197,6 +199,7 @@ class AndTrigger(Trigger, NewsStory):
         self.trig1, self.trig2 = trig1, trig2
     
     def evaluate(self, story):
+        print('AND',self.trig1.evaluate(story), self.trig2.evaluate(story))
         return self.trig1.evaluate(story) and self.trig2.evaluate(story)
 
 # Problem 9
@@ -206,6 +209,7 @@ class OrTrigger(Trigger, NewsStory):
         self.trig1, self.trig2 = trig1, trig2
     
     def evaluate(self, story):
+        print('OR', self.trig1.evaluate(story), self.trig2.evaluate(story))
         return self.trig1.evaluate(story) or self.trig2.evaluate(story)
 
 #======================
@@ -223,13 +227,14 @@ def filter_stories(stories, triggerlist):
     # This is a placeholder
     # (we're just returning all the stories, with no filtering)
     filtered_list = []
-    
+
     for story in stories:
         for trigger in triggerlist:
             if trigger.evaluate(story):
                 filtered_list.append(story)
             else:
                 continue
+            
     return filtered_list
 
 
@@ -275,19 +280,16 @@ def read_trigger_config(filename):
     trig_dic = dict()
     triggerlist = []
     
-    for line in broken_lines:
-        var_name, trig = line[0], line[1]
+    for line in broken_lines: 
+        var_name, trig = line[0], line[1]  
         if var_name == 'ADD':
-            for t in line[1:]:
-                triggerlist.append(t)         
-        elif trig == 'AND' or trig == 'OR': 
-            arg_one, arg_two = line[2], line[3]
+            for t in line[1:]: triggerlist.append(trig_dic[t])      
+        elif trig == 'AND' or trig == 'OR':
+            arg_one, arg_two = trig_dic[line[2]], trig_dic[line[3]]
             trig_dic.update({var_name: trigger_dict[trig](arg_one, arg_two)})
-            #trig_dic[var_name] = trigger_dict[trig](arg_one, arg_two)
         else:
-            str_arg = ''.join(line[2:])
+            str_arg =   ' '.join(line[2:])
             trig_dic.update({var_name: trigger_dict[trig](str_arg)})
-            #trig_dic[var_name] = trigger_dict[trig](str_arg)
             
     return triggerlist
 
@@ -299,16 +301,19 @@ def main_thread(master):
     # A sample trigger list - you might need to change the phrases to correspond
     # to what is currently in the news
     try:
-        t1 = TitleTrigger("London")
-        t2 = DescriptionTrigger("Terror")
-        t3 = DescriptionTrigger("attack")
-        t4 = AndTrigger(t2, t3)
-        triggerlist = [t1, t4]
-
+#        t1 = TitleTrigger("London")
+#        t2 = DescriptionTrigger("Terror")
+#        t3 = DescriptionTrigger("attack")
+#        t5 = AfterTrigger("18 Jun 2017 17:00:10")
+#        t6 = AndTrigger(t1, t5)
+#        t4 = AndTrigger(t2, t3)
+#        triggerlist = [t6, t4]
+#        print(type(triggerlist[0]), {triggerlist[0]})
         # Problem 11
         # TODO: After implementing read_trigger_config, uncomment this line 
         triggerlist = read_trigger_config('triggers.txt')
-        print(triggerlist)
+        print(triggerlist[1], {triggerlist[1]})
+
         
         # HELPER CODE - you don't need to understand this!
         # Draws the popup window that displays the filtered stories
