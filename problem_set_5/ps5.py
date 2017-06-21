@@ -68,7 +68,6 @@ class NewsStory(object):
         return self.guid
         
     def get_title(self):
-        print(self.title)
         return self.title
      
     def get_description(self):
@@ -178,7 +177,7 @@ class BeforeTrigger(TimeTrigger):
 class AfterTrigger(TimeTrigger): 
     def evaluate(self, story):
         self.pubdate = self.fix_pubdate(story)
-        print(self.pubdate, self.EST)
+        #print(self.pubdate, self.EST)
         return self.pubdate > self.EST
 
 # COMPOSITE TRIGGERS
@@ -199,7 +198,7 @@ class AndTrigger(Trigger, NewsStory):
         self.trig1, self.trig2 = trig1, trig2
     
     def evaluate(self, story):
-        print('AND',self.trig1.evaluate(story), self.trig2.evaluate(story))
+        #print('AND',self.trig1.evaluate(story), self.trig2.evaluate(story))
         return self.trig1.evaluate(story) and self.trig2.evaluate(story)
 
 # Problem 9
@@ -209,7 +208,7 @@ class OrTrigger(Trigger, NewsStory):
         self.trig1, self.trig2 = trig1, trig2
     
     def evaluate(self, story):
-        print('OR', self.trig1.evaluate(story), self.trig2.evaluate(story))
+        #print('OR', self.trig1.evaluate(story), self.trig2.evaluate(story))
         return self.trig1.evaluate(story) or self.trig2.evaluate(story)
 
 #======================
@@ -308,11 +307,10 @@ def main_thread(master):
 #        t6 = AndTrigger(t1, t5)
 #        t4 = AndTrigger(t2, t3)
 #        triggerlist = [t6, t4]
-#        print(type(triggerlist[0]), {triggerlist[0]})
+    
         # Problem 11
         # TODO: After implementing read_trigger_config, uncomment this line 
         triggerlist = read_trigger_config('triggers.txt')
-        print(triggerlist[1], {triggerlist[1]})
 
         
         # HELPER CODE - you don't need to understand this!
